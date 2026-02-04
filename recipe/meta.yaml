@@ -39,6 +39,11 @@ requirements:
   "--ignore=tests/unit_tests/test_imports.py",
   "--ignore=tests/unit_tests/test_pytest_config.py"
 ]%}
+{% set deselected_tests_win = [
+  "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[700-600]",
+  "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[770-660]"
+]%}
+
 test:
   source_files:
     - tests
@@ -48,7 +53,8 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }}
+    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} # [unix]
+    - pytest tests/unit_tests -vv {{ deselected_tests_win | join(" ") }} # [win]
   requires:
     - pip
     - python
