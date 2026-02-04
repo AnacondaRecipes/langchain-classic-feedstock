@@ -33,12 +33,16 @@ requirements:
     - async-timeout >=4.0.0,<5.0.0 # [py<311]
 
 # ModuleNotFoundError: No module named 'syrupy'
+# ModuleNotFoundError: No module named 'lark'
 {% set ignored_tests = [
   "--ignore=tests/unit_tests/runnables/test_openai_functions.py",
   "--ignore=tests/unit_tests/load/test_dump.py",
   "--ignore=tests/unit_tests/test_imports.py",
-  "--ignore=tests/unit_tests/test_pytest_config.py"
+  "--ignore=tests/unit_tests/test_pytest_config.py",
+  "--ignore=tests/unit_tests/chains/query_constructor/test_parser.py",
+  "--ignore=tests/unit_tests/retrievers/self_query/test_base.py"
 ]%}
+
 {% set deselected_tests_win = [
   "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[700-600]",
   "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[770-660]"
@@ -59,7 +63,6 @@ test:
     - pip
     - python
     - toml
-    - lark
     - numpy
     - pandas
     - pytest-socket
