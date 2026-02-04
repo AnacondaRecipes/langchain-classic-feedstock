@@ -59,7 +59,6 @@ test:
     - pip
     - python
     - toml
-    - lark
     - numpy
     - pandas
     - pytest-socket
