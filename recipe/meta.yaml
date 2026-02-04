@@ -54,7 +54,7 @@ test:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
     - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} # [unix]
-    - pytest tests/unit_tests -vv {{ deselected_tests_win | join(" ") }} # [win]
+    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} {{ deselected_tests_win | join(" ") }} # [win]
   requires:
     - pip
     - python
