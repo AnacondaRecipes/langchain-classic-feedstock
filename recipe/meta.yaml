@@ -1,20 +1,20 @@
 {% set name = "langchain-classic" %}
-{% set version = "1.0.1" %}
+{% set version = "1.0.8" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
-  sha256: 40a499684df36b005a1213735dc7f8dca8f5eb67978d6ec763e7a49780864fdc
+  sha256: ada0cc341a8a5b80fb24d73bdfaaeb849056ee2d8a41cc468355163fd3667484
   patches:
     - fix_tests.patch
 
 build:
   number: 0
-  skip: true # [py<310]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true # [py<310]
 
 requirements:
   host:
@@ -23,8 +23,8 @@ requirements:
     - pip
   run:
     - python
-    - langchain-core >=1.2.5,<2.0.0
-    - langchain-text-splitters >=1.1.0,<2.0.0
+    - langchain-core >=1.4.4,<2.0.0
+    - langchain-text-splitters >=1.1.2,<2.0.0
     - langsmith >=0.1.17,<1.0.0
     - pydantic >=2.7.4,<3.0.0
     - sqlalchemy >=1.4.0,<3.0.0
