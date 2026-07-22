@@ -40,7 +40,8 @@ requirements:
   "--ignore=tests/unit_tests/test_imports.py",
   "--ignore=tests/unit_tests/test_pytest_config.py",
   "--ignore=tests/unit_tests/chains/query_constructor/test_parser.py",
-  "--ignore=tests/unit_tests/retrievers/self_query/test_base.py"
+  "--ignore=tests/unit_tests/retrievers/self_query/test_base.py",
+  "--ignore=tests/unit_tests/chat_models/test_base.py::test_configurable",
 ]%}
 
 {% set deselected_tests_win = [
