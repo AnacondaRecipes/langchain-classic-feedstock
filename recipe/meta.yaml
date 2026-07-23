@@ -42,15 +42,10 @@ requirements:
   "--ignore=tests/unit_tests/chains/query_constructor/test_parser.py",
   "--ignore=tests/unit_tests/retrievers/self_query/test_base.py",
 ]%}
-# langchain-openai 1.1.7 not in main yet
-{% set deselected_tests_unix = [
-  "--deselect=tests/unit_tests/chains/test_flare.py::test_from_llm_rejects_non_chatopenai",
-]%}
 
-{% set deselected_tests_win = [
-  "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[700-600]",
-  "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[770-660]",
-]%}
+# langchain-openai 1.1.10 not in main yet
+{% set deselect_tests = " --deselect=tests/unit_tests/chains/test_flare.py::test_from_llm_rejects_non_chatopenai" %}
+{% set deselect_tests = deselect_tests + " --deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod" %}  # [win]
 
 test:
   source_files:
@@ -61,8 +56,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} {{ deselected_tests_unix | join(" ") }} # [unix]
-    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} {{ deselected_tests_win | join(" ") }} # [win]
+    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} {{ deselected_tests }}
   requires:
     - pip
     - python
