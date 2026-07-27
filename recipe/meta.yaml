@@ -1,20 +1,20 @@
 {% set name = "langchain-classic" %}
-{% set version = "1.0.1" %}
+{% set version = "1.0.8" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
-  sha256: 40a499684df36b005a1213735dc7f8dca8f5eb67978d6ec763e7a49780864fdc
+  sha256: ada0cc341a8a5b80fb24d73bdfaaeb849056ee2d8a41cc468355163fd3667484
   patches:
     - fix_tests.patch
 
 build:
   number: 0
-  skip: true # [py<310]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true # [py<310]
 
 requirements:
   host:
@@ -23,8 +23,8 @@ requirements:
     - pip
   run:
     - python
-    - langchain-core >=1.2.5,<2.0.0
-    - langchain-text-splitters >=1.1.0,<2.0.0
+    - langchain-core >=1.4.4,<2.0.0
+    - langchain-text-splitters >=1.1.2,<2.0.0
     - langsmith >=0.1.17,<1.0.0
     - pydantic >=2.7.4,<3.0.0
     - sqlalchemy >=1.4.0,<3.0.0
@@ -40,13 +40,12 @@ requirements:
   "--ignore=tests/unit_tests/test_imports.py",
   "--ignore=tests/unit_tests/test_pytest_config.py",
   "--ignore=tests/unit_tests/chains/query_constructor/test_parser.py",
-  "--ignore=tests/unit_tests/retrievers/self_query/test_base.py"
+  "--ignore=tests/unit_tests/retrievers/self_query/test_base.py",
 ]%}
 
-{% set deselected_tests_win = [
-  "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[700-600]",
-  "--deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod[770-660]"
-]%}
+# langchain-openai 1.1.10 not in main yet
+{% set deselect_tests = " --deselect=tests/unit_tests/chains/test_flare.py::test_from_llm_rejects_non_chatopenai" %}
+{% set deselect_tests = deselect_tests + " --deselect=tests/unit_tests/storage/test_filesystem.py::test_mset_chmod" %}  # [win]
 
 test:
   source_files:
@@ -57,8 +56,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} # [unix]
-    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} {{ deselected_tests_win | join(" ") }} # [win]
+    - pytest tests/unit_tests -vv {{ ignored_tests | join(" ") }} {{ deselect_tests }}
   requires:
     - pip
     - python
@@ -70,7 +68,6 @@ test:
     - pytest-mock
     - freezegun
     - pytest >=8.0.0,<9.0.0
-    - langchain-openai
 
 about:
   home: https://github.com/langchain-ai/langchain
